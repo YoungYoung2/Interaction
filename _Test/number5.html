@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottie Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+
+        #animationContainer {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="animationContainer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.5/lottie.min.js"></script>
+    <script>
+        // 로티 파일
+        var animation = lottie.loadAnimation({
+            container: document.getElementById('animationContainer'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'anim.json'
+        });
+
+        // 애니메이션
+        var container = document.getElementById('animationContainer');
+        var containerWidth = 200;
+        var startPosition = -containerWidth;
+        var endPosition = window.innerWidth;
+        var duration = 5000;
+
+        function animate() {
+            var startTime = null;
+
+            function move(timestamp) {
+                if (!startTime) startTime = timestamp;
+                var progress = timestamp - startTime;
+                var currentPosition = startPosition + (progress / duration) * (endPosition - startPosition);
+
+                container.style.left = currentPosition + 'px';
+
+                if (progress < duration) {
+                    requestAnimationFrame(move);
+                } else {
+                    startTime = null;
+                    requestAnimationFrame(move);
+                }
+            }
+
+            requestAnimationFrame(move);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>
