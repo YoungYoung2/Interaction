@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lottie Animation</title>
+    <title>5번</title>
     <style>
         body {
             margin: 0;
@@ -19,6 +19,11 @@
             transform: translateY(-50%);
             width: 200px;
             height: 200px;
+        }
+
+        #numberLine {
+            display: block;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -38,11 +43,13 @@
         });
 
         // 애니메이션
+        // 애니메이션
         var container = document.getElementById('animationContainer');
         var containerWidth = 200;
-        var startPosition = -containerWidth;
-        var endPosition = window.innerWidth;
-        var duration = 5000;
+        var margin = 50; // 화면 가장자리로부터의 여백
+        var startPosition = margin;
+        var endPosition = window.innerWidth - containerWidth - margin;
+        var duration = 2000;
 
         function animate() {
             var startTime = null;
@@ -52,20 +59,25 @@
                 var progress = timestamp - startTime;
                 var currentPosition = startPosition + (progress / duration) * (endPosition - startPosition);
 
+                if (currentPosition >= endPosition) {
+                    currentPosition = startPosition;
+                    startTime = null;
+                }
+
                 container.style.left = currentPosition + 'px';
 
-                if (progress < duration) {
-                    requestAnimationFrame(move);
-                } else {
-                    startTime = null;
-                    requestAnimationFrame(move);
-                }
+                requestAnimationFrame(move);
             }
 
             requestAnimationFrame(move);
         }
 
         animate();
+
+        // 화면 크기가 변경될 때 애니메이션 범위 조정
+        window.addEventListener('resize', function () {
+            endPosition = window.innerWidth - containerWidth - margin;
+        });
     </script>
 </body>
 
