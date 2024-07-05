@@ -1,4 +1,4 @@
 *.mp4
 *.ipynb
 *.py
-__manim
+__manim/media
