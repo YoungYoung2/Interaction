@@ -72,7 +72,7 @@
         let animationFrameId;
         let isRunning = false;
 
-        // Lottie 애니메이션 로드
+        // 로티
         studentAnim = lottie.loadAnimation({
             container: studentElement,
             renderer: 'svg',
@@ -89,7 +89,7 @@
             path: 'anim.json'
         });
 
-        // 깃발 드래그 기능
+        // 깃발
         let isDragging = false;
         flag.addEventListener('mousedown', (e) => {
             if (!isRunning) {
@@ -172,7 +172,7 @@
             }
         });
 
-        // 초기 상태 설정
+        // 초기 상태
         resetPositions();
     </script>
 </body>
