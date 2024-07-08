@@ -4,21 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lottie 애니메이션 가로 이동</title>
+    <title>활동 14번 스크롤</title>
     <style>
-        body,
-        html {
+        body {
             margin: 0;
             padding: 0;
-            height: 100%;
             overflow-x: scroll;
-            overflow-y: hidden;
         }
 
-        #lottie-container {
+        .animation-container {
+            width: 500vw;
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(to right, #f0f0f0, #e0e0e0);
+        }
+
+        #lottie-animation {
             position: fixed;
             top: 50%;
-            transform: translateY(-50%);
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 200px;
             height: 200px;
         }
@@ -26,70 +31,69 @@
         #toggle-button {
             position: fixed;
             top: 20px;
-            right: 20px;
+            left: 20px;
+            z-index: 10;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            z-index: 10;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
 </head>
 
 <body>
-    <div id="lottie-container"></div>
     <button id="toggle-button">시작</button>
+    <div class="animation-container">
+        <div id="lottie-animation"></div>
+    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
     <script>
-        let animation;
-        let isPlaying = false;
-        let animationPosition = 0;
-        const moveSpeed = 2; // 이동 속도 (픽셀/프레임)
-
-        // Lottie 애니메이션 로드
-        animation = lottie.loadAnimation({
-            container: document.getElementById('lottie-container'),
+        var animation = lottie.loadAnimation({
+            container: document.getElementById('lottie-animation'),
             renderer: 'svg',
             loop: true,
             autoplay: false,
-            path: 'anim.json' // Lottie JSON 파일 경로
+            path: 'anim.json' // 로티
         });
 
-        function moveAnimation() {
-            if (isPlaying) {
-                animationPosition += moveSpeed;
-                document.getElementById('lottie-container').style.left = `${animationPosition}px`;
+        var animationDuration = 10000; // 애니메이션 총 지속 시간 (ms)
+        var scrollDistance = document.documentElement.scrollWidth - window.innerWidth;
+        var startTime;
+        var animationRunning = false;
+        var pausedTime = 0;
 
-                // 화면 끝에 도달하면 스크롤 조정
-                if (animationPosition > window.innerWidth) {
-                    window.scrollTo(animationPosition - window.innerWidth, 0);
-                }
+        function updateAnimation(timestamp) {
+            if (!animationRunning) return;
 
-                requestAnimationFrame(moveAnimation);
+            if (!startTime) startTime = timestamp - pausedTime;
+            var progress = (timestamp - startTime) % animationDuration;
+            var scrollPosition = (progress / animationDuration) * scrollDistance;
+
+            window.scrollTo(scrollPosition, 0);
+
+            if (progress >= animationDuration) {
+                startTime = timestamp; // 애니메이션 재시작
+            }
+
+            requestAnimationFrame(updateAnimation);
+        }
+
+        function toggleAnimation() {
+            var button = document.getElementById('toggle-button');
+            if (animationRunning) {
+                animationRunning = false;
+                animation.pause();
+                button.textContent = '시작';
+                pausedTime = performance.now() - startTime;
+            } else {
+                animationRunning = true;
+                animation.play();
+                button.textContent = '멈춤';
+                requestAnimationFrame(updateAnimation);
             }
         }
 
-        // 토글 버튼 기능
-        const toggleButton = document.getElementById('toggle-button');
-        toggleButton.addEventListener('click', () => {
-            isPlaying = !isPlaying;
-            if (isPlaying) {
-                animation.play();
-                toggleButton.textContent = '일시정지';
-                moveAnimation();
-            } else {
-                animation.pause();
-                toggleButton.textContent = '시작';
-            }
-        });
-
-        // 스크롤 이벤트 리스너 (옵션)
-        window.addEventListener('scroll', () => {
-            if (!isPlaying) {
-                animationPosition = window.scrollX;
-                document.getElementById('lottie-container').style.left = `${animationPosition}px`;
-            }
-        });
+        document.getElementById('toggle-button').addEventListener('click', toggleAnimation);
     </script>
 </body>
 
