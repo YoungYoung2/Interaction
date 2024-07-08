@@ -4,44 +4,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lottie 애니메이션</title>
+    <title>활동 29번</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
     <style>
-        #animation-container {
+        #container {
+            position: relative;
             width: 100%;
             height: 300px;
+            background-color: #f0f0f0;
+        }
+
+        #student,
+        #athlete,
+        #flag {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        #student,
+        #athlete {
+            width: 100px;
+            height: 100px;
+        }
+
+        #student {
+            left: 0;
+        }
+
+        #athlete {
+            right: 0;
+            transform: translateY(-50%) scaleX(-1);
+        }
+
+        #flag {
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: move;
+            user-select: none;
+            font-size: 24px;
+        }
+
+        #toggleButton {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-    <div id="animation-container"></div>
+    <div id="container">
+        <div id="student"></div>
+        <div id="athlete"></div>
+        <div id="flag">🚩</div>
+    </div>
+    <button id="toggleButton">시작</button>
 
     <script>
-        let animation = lottie.loadAnimation({
-            container: document.getElementById('animation-container'),
+        const container = document.getElementById('container');
+        const flag = document.getElementById('flag');
+        const studentElement = document.getElementById('student');
+        const athleteElement = document.getElementById('athlete');
+        const toggleButton = document.getElementById('toggleButton');
+        let studentAnim, athleteAnim;
+        let animationFrameId;
+        let isRunning = false;
+
+        // Lottie 애니메이션 로드
+        studentAnim = lottie.loadAnimation({
+            container: studentElement,
             renderer: 'svg',
             loop: true,
-            autoplay: true,
-            path: 'anim.json' // anim.json 파일의 경로
+            autoplay: false,
+            path: 'anim.json'
         });
 
-        // 애니메이션을 왼쪽으로 이동시키는 함수
-        function moveLeft() {
-            let position = 0;
-            const interval = setInterval(() => {
-                position -= 1; // 이동 속도 조절
-                animation.renderer.svgElement.style.transform = `translateX(${position}px)`;
+        athleteAnim = lottie.loadAnimation({
+            container: athleteElement,
+            renderer: 'svg',
+            loop: true,
+            autoplay: false,
+            path: 'anim.json'
+        });
 
-                // 화면 왼쪽 끝에 도달하면 멈춤
-                if (position <= -animation.renderer.svgElement.getBoundingClientRect().width) {
-                    clearInterval(interval);
+        // 깃발 드래그 기능
+        let isDragging = false;
+        flag.addEventListener('mousedown', (e) => {
+            if (!isRunning) {
+                isDragging = true;
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging && !isRunning) {
+                const containerRect = container.getBoundingClientRect();
+                let newX = e.clientX - containerRect.left;
+                newX = Math.max(0, Math.min(newX, containerRect.width));
+                flag.style.left = `${newX}px`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        function startAnimation() {
+            isRunning = true;
+            const containerWidth = container.offsetWidth;
+            const flagPosition = flag.offsetLeft;
+            const studentSpeed = 100;
+            const athleteSpeed = 150;
+
+            let startTime = null;
+
+            function animate(currentTime) {
+                if (!startTime) startTime = currentTime;
+                const elapsedTime = (currentTime - startTime) / 1000; // 초 단위로 변환
+
+                const studentPosition = Math.min(elapsedTime * studentSpeed, flagPosition);
+                const athletePosition = Math.min(elapsedTime * athleteSpeed, containerWidth - flagPosition);
+
+                studentElement.style.left = `${studentPosition}px`;
+                athleteElement.style.right = `${athletePosition}px`;
+
+                // 깃발에 닿았는지 확인
+                if (studentPosition >= flagPosition - 50 || athletePosition >= containerWidth - flagPosition - 50) {
+                    stopAnimationWithoutReset();
+                    return;
                 }
-            }, 20); // 이동 간격 조절
+
+                animationFrameId = requestAnimationFrame(animate);
+            }
+
+            studentAnim.play();
+            athleteAnim.play();
+            animationFrameId = requestAnimationFrame(animate);
+            toggleButton.textContent = '정지';
         }
 
-        // 애니메이션 로드 완료 후 왼쪽으로 이동 시작
-        animation.addEventListener('DOMLoaded', moveLeft);
+        function stopAnimationWithoutReset() {
+            isRunning = false;
+            cancelAnimationFrame(animationFrameId);
+            studentAnim.pause();
+            athleteAnim.pause();
+            toggleButton.textContent = '시작';
+        }
+
+        function stopAnimation() {
+            stopAnimationWithoutReset();
+            resetPositions();
+        }
+
+        function resetPositions() {
+            studentElement.style.left = '0px';
+            athleteElement.style.right = '0px';
+        }
+
+        toggleButton.addEventListener('click', () => {
+            if (isRunning) {
+                stopAnimation();
+            } else {
+                resetPositions();
+                startAnimation();
+            }
+        });
+
+        // 초기 상태 설정
+        resetPositions();
     </script>
 </body>
 
