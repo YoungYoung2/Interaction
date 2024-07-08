@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>AIDT Content</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/black.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/zenburn.min.css">
+
+</head>
+
+<style>
+  .circle-button {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+  }
+</style>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section data-background-size='contain' data-background-color="black"
+        data-background-video="number14_assets\dfca7173583e157f8f8b9c4dabe0b54816f92749d6aca1c885952f312a407125.mp4"
+        data-background-video-muted>
+
+      </section>
+      <section data-background-size='contain' data-background-color="black"
+        data-background-video="number14_assets\6eed397991ed17459ed196afe90065d1844526c4362e72394908322b9fa1efba.mp4">
+
+      </section>
+      <section data-background-size='contain' data-background-color="black"
+        data-background-video="number14_assets\c635167bc7303a573b1385ec6d13a4afcbd5f01b35aceafb8c9c671315cb17dd.mp4">
+
+      </section>
+    </div>
+  </div>
+
+  <div class="circle-button" onclick="Reveal.slide(0)"> &#8962;</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+
+  <script>
+    Reveal.initialize({
+      slideNumber: false,
+      controls: false,
+      loop: true,
+      backgroundTransition: 'none',
+      progress: false,
+      scrollActivationWidth: null,
+      keyboard: false,
+      overview: false,
+      touch: true,
+      disableLayout: true,
+    });
+
+    document.querySelector('.reveal').addEventListener('click', function (event) {
+      if (event.target.tagName !== 'A' && event.target.tagName !== 'BUTTON') {
+        Reveal.next();
+      }
+    });
+  </script>
+
+
+</body>
+
+</html>

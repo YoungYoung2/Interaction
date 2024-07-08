@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottie 애니메이션 가로 이동</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-x: scroll;
+            overflow-y: hidden;
+        }
+
+        #lottie-container {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;
+            height: 200px;
+        }
+
+        #toggle-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="lottie-container"></div>
+    <button id="toggle-button">시작</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
+    <script>
+        let animation;
+        let isPlaying = false;
+        let animationPosition = 0;
+        const moveSpeed = 2; // 이동 속도 (픽셀/프레임)
+
+        // Lottie 애니메이션 로드
+        animation = lottie.loadAnimation({
+            container: document.getElementById('lottie-container'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: false,
+            path: 'anim.json' // Lottie JSON 파일 경로
+        });
+
+        function moveAnimation() {
+            if (isPlaying) {
+                animationPosition += moveSpeed;
+                document.getElementById('lottie-container').style.left = `${animationPosition}px`;
+
+                // 화면 끝에 도달하면 스크롤 조정
+                if (animationPosition > window.innerWidth) {
+                    window.scrollTo(animationPosition - window.innerWidth, 0);
+                }
+
+                requestAnimationFrame(moveAnimation);
+            }
+        }
+
+        // 토글 버튼 기능
+        const toggleButton = document.getElementById('toggle-button');
+        toggleButton.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                animation.play();
+                toggleButton.textContent = '일시정지';
+                moveAnimation();
+            } else {
+                animation.pause();
+                toggleButton.textContent = '시작';
+            }
+        });
+
+        // 스크롤 이벤트 리스너 (옵션)
+        window.addEventListener('scroll', () => {
+            if (!isPlaying) {
+                animationPosition = window.scrollX;
+                document.getElementById('lottie-container').style.left = `${animationPosition}px`;
+            }
+        });
+    </script>
+</body>
+
+</html>
