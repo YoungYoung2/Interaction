@@ -23,7 +23,7 @@
             renderer: 'svg',
             loop: true,
             autoplay: true,
-            path: 'anim.json' // anim.json 파일의 경로
+            path: 'anim.json'
         });
 
         // 애니메이션을 왼쪽으로 이동시키는 함수
@@ -33,14 +33,13 @@
                 position -= 1; // 이동 속도 조절
                 animation.renderer.svgElement.style.transform = `translateX(${position}px)`;
 
-                // 화면 왼쪽 끝에 도달하면 멈춤
+
                 if (position <= -animation.renderer.svgElement.getBoundingClientRect().width) {
                     clearInterval(interval);
                 }
             }, 20); // 이동 간격 조절
         }
 
-        // 애니메이션 로드 완료 후 왼쪽으로 이동 시작
         animation.addEventListener('DOMLoaded', moveLeft);
     </script>
 </body>
