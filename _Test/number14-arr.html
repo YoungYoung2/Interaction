@@ -38,7 +38,7 @@
             text-align: center;
             margin-top: 10px;
             font-family: Arial, sans-serif;
-            font-size: 28px;
+            font-size: 24px;
             color: #333;
         }
 
@@ -69,19 +69,27 @@
                 right: 0%;
             }
         }
+
+        #runner-container {
+            width: 300px;
+            height: 300px;
+            margin: 30px;
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
 </head>
 
 <body>
     <div>
         <h1>화면의 오른쪽을 보고 있다고 가정</h1>
+        <div id="runner-container"></div>
     </div>
     <div class="arrow-group">
         <div class="arrow-container">
             <img src="arr.svg" alt="Arrow" width="200" height="100">
             <div class="arrow-wipe"></div>
         </div>
-        <div class="arrow-description">정방향으로 뛸 때 (앞으로 뛸 때)</div>
+        <div class="arrow-description">정방향으로 뛸 때 (앞으로 뛸 때) 그려지는 화살표</div>
     </div>
 
     <div class="arrow-group">
@@ -89,8 +97,18 @@
             <img src="arr.svg" alt="Red Arrow" width="200" height="100">
             <div class="arrow-wipe"></div>
         </div>
-        <div class="arrow-description">역방향으로 뛸 때 (뒤로 뛸 때)</div>
+        <div class="arrow-description">역방향으로 뛸 때 (뒤로 뛸 때) 그려지는 화살표</div>
     </div>
+
+    <script>
+        var animation = lottie.loadAnimation({
+            container: document.getElementById('runner-container'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'anim.json'
+        });
+    </script>
 </body>
 
 </html>
